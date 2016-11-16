@@ -262,7 +262,12 @@ public class MainActivity extends AppCompatActivity {
     public void onRestart()
     {
         super.onRestart();
-        finish();
-        startActivity(getIntent());
+        //finish();
+        //startActivity(getIntent());
+        // Display group as saved in preferences
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String group = prefs.getString("groupNumber", "");
+        int grp = Integer.parseInt(group);
+        mViewPager.setCurrentItem(grp-1);
     }
 }
