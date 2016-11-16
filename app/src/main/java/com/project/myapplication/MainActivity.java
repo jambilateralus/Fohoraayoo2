@@ -1,28 +1,25 @@
 package com.project.myapplication;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -82,10 +79,54 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+        // Start settings activity
         if (id == R.id.action_settings) {
             startActivity(new Intent(getBaseContext(),SettingsActivity.class));
             return true;
         }
+
+        // Save gps location to database
+        else if (id == R.id.gps_settings){
+            if (!GPSLocation.gpsIsOn(getBaseContext())){
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setTitle("Confirm");
+                builder.setMessage("Are you sure?");
+
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do nothing but close the dialog
+                        GPSLocation.openGpsSettings(getBaseContext());
+                    }
+                });
+
+                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        // Do nothing
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog alert = builder.create();
+                alert.show();
+            } else{
+                GPSLocation.getCurrentLocation(getBaseContext());
+            }
+        }
+
+        // Update schedule
+        else if (id == R.id.action_update){
+            if(!ScheduleUpdater.isUpdateAvailable()) {
+                Toast.makeText(this, "Update not available", Toast.LENGTH_SHORT).show();
+            }else{
+                ScheduleUpdater.update(getBaseContext());
+            }
+        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -121,26 +162,19 @@ public class MainActivity extends AppCompatActivity {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
             ////////////////////////
+
+            int currentTab = getArguments().getInt(ARG_SECTION_NUMBER);
+
+
+
             DBHelper handler = new DBHelper(getContext());
 
             // Insert items to database
-            //handler.insertItem("hello",1);
-            //handler.insertItem("Sunday",1);
-            //handler.insertItem("Monday",2);
-            //handler.insertItem("Tuesday",3);
-            //handler.insertItem("Wednesday",4);
-            //handler.insertItem("Thursday",5);
-            //handler.insertItem("Friday",6);
-            //handler.insertItem("Saturday",7);
-
-
-
-
-
-
+            //handler.insertItem("x","o","o","i","o","x","x");
 
             SQLiteDatabase db = handler.getWritableDatabase();
-            Cursor cursor = db.rawQuery("SELECT * FROM testTable",null);
+            String query  = "SELECT * FROM scheduleTable";
+            Cursor cursor = db.rawQuery(query,null);
 
             // ListView with onItemClickListener
             ListView listView = (ListView) rootView.findViewById(R.id.list_view);
@@ -161,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
             });
 
             // Set custom adapter to listView
-            CustomCursorAdapter customCursorAdapter = new CustomCursorAdapter(getContext(), cursor);
+            CustomCursorAdapter customCursorAdapter = new CustomCursorAdapter(getContext(), cursor, currentTab);
             listView.setAdapter(customCursorAdapter);
             /////////////////////////////////////
 

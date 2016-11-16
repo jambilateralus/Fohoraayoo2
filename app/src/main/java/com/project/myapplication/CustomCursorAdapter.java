@@ -16,8 +16,10 @@ import android.widget.Toast;
 
 class CustomCursorAdapter extends CursorAdapter {
 
-    CustomCursorAdapter(Context context, Cursor cursor){
+    int tabPosition;
+    CustomCursorAdapter(Context context, Cursor cursor, int tabPosition){
         super(context,cursor,0);
+        this.tabPosition = tabPosition;
     }
 
     @Override
@@ -30,24 +32,49 @@ class CustomCursorAdapter extends CursorAdapter {
         // Find fields to populate in inflated template
         TextView comp1 = (TextView) view.findViewById(R.id.component1);
         TextView comp2 = (TextView) view.findViewById(R.id.component2);
-        Button btn = (Button) view.findViewById(R.id.button);
 
         // Extract properties from cursor
-        final String dbColumnName1 = cursor.getString(cursor.getColumnIndexOrThrow("item1"));
-        int dbColumnName2 = cursor.getInt(cursor.getColumnIndexOrThrow("item2"));
+        String cmp = "item"+tabPosition;
+        final String vehicleType = cursor.getString(cursor.getColumnIndexOrThrow(cmp));
+        int pos = cursor.getInt(cursor.getColumnIndexOrThrow("item0"));
+
 
         // Populate fields with extracted properties
-        comp1.setText(dbColumnName1);
-        comp2.setText(String.valueOf(dbColumnName2));
+        comp1.setText(getDay(pos));
+        comp2.setText(getVehicleType(vehicleType));
 
-        // Btn onClick listener
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, dbColumnName1, Toast.LENGTH_SHORT).show();
-            }
-        });
+    }
 
+    private String getVehicleType(String x){
+        switch (x){
+            case "o":
+                return "Organic";
+            case "i":
+                return "Inorganic";
+            case "x":
+                return "--";
+        }
+        return null;
+    }
+
+    private String getDay(int position) {
+        switch (position) {
+            case 0:
+                return "Sunday";
+            case 1:
+                return "Monday";
+            case 2:
+                return "Tuesday";
+            case 3:
+                return "Wednesday";
+            case 4:
+                return "Thursday";
+            case 5:
+                return "Friday";
+            case 6:
+                return "Saturday";
+        }
+        return null;
     }
 
 }
