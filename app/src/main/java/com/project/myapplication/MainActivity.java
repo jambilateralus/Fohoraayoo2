@@ -2,9 +2,11 @@ package com.project.myapplication;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -59,8 +61,11 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        // TODO: 11/11/16 make it dynamic. take value from database.
-        mViewPager.setCurrentItem(1);
+        // Display group as saved in preferences
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String group = prefs.getString("groupNumber", "");
+        int grp = Integer.parseInt(group);
+        mViewPager.setCurrentItem(grp-1);
     }
 
 

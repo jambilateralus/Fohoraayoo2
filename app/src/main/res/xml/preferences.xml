@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:summary="Group"
+        android:title="Group">
+    <ListPreference
+        android:title="Group"
+        android:summary="Select your group."
+        android:key="groupNumber"
+        android:defaultValue="1"
+        android:entries="@array/GroupName"
+        android:entryValues="@array/Group" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:summary="Notification"
+        android:title="Notification" >
+        <SwitchPreference
+            android:title="Notification"
+            android:summary="Switch notification."
+            android:key="notificationStatus"
+            android:defaultValue="true"/>
+
+        <CheckBoxPreference
+            android:title="Daily notification"
+            android:dependency="notificationStatus"
+            android:summary="Notify me every morning if the garbage vehicle is scheduled in my area."
+            android:key="dailyNotification"
+            android:defaultValue="isChecked"/>
+
+        <ListPreference
+            android:title="Distance"
+            android:dependency="notificationStatus"
+            android:summary="Notify me when garbage vehicle is at distance."
+            android:key="distance"
+            android:defaultValue="30"
+            android:entries="@array/DistanceName"
+            android:entryValues="@array/Distance" />
+
+        <RingtonePreference
+            android:title="Ringtone"
+            android:dependency="notificationStatus"
+            android:key="ringtone"
+            android:summary="Select ringtone."
+            />
+
+    </PreferenceCategory>
+</PreferenceScreen>

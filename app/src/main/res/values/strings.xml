@@ -6,6 +6,49 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_settings">Settings</string>
 
+    <string-array name="Group">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+
+    <string-array name="GroupName">
+        <item>Group 1</item>
+        <item>Group 2</item>
+        <item>Group 3</item>
+        <item>Group 4</item>
+        <item>Group 5</item>
+        <item>Group 6</item>
+        <item>Group 7</item>
+    </string-array>
+
+    <string-array name="Distance">
+        <item>5</item>
+        <item>20</item>
+        <item>30</item>
+        <item>50</item>
+        <item>70</item>
+        <item>100</item>
+        <item>150</item>
+        <item>200</item>
+        <item>250</item>
+    </string-array>
+
+    <string-array name="DistanceName">
+        <item>5 meters</item>
+        <item>20 meters</item>
+        <item>30 meters</item>
+        <item>50 meters</item>
+        <item>70 meters</item>
+        <item>100 meters</item>
+        <item>150 meters</item>
+        <item>200 meters</item>
+        <item>250 meters</item>
+    </string-array>
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
