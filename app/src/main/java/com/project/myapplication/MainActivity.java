@@ -176,8 +176,9 @@ public class MainActivity extends AppCompatActivity {
             String query  = "SELECT * FROM scheduleTable";
             Cursor cursor = db.rawQuery(query,null);
 
-            // ListView with onItemClickListener
             ListView listView = (ListView) rootView.findViewById(R.id.list_view);
+            // ListView with onItemClickListener
+            /**
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -192,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getContext(), "Long clicked: "+position, Toast.LENGTH_SHORT).show();
                     return true;
                 }
-            });
+            });*/
 
             // Set custom adapter to listView
             CustomCursorAdapter customCursorAdapter = new CustomCursorAdapter(getContext(), cursor, currentTab);
