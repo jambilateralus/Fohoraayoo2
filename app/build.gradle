@@ -32,5 +32,9 @@ dependencies {
     compile 'com.android.support:support-vector-drawable:25.0.0'
     compile 'com.google.android.gms:play-services-maps:9.8.0'
     compile 'com.google.android.gms:play-services-plus:9.8.0'
+    compile 'com.google.firebase:firebase-messaging:9.8.0'
     testCompile 'junit:junit:4.12'
 }
+
+
+apply plugin: 'com.google.gms.google-services'

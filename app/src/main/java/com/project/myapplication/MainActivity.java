@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Display group as saved in preferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String group = prefs.getString("groupNumber", "");
+        String group = prefs.getString("groupNumber", "1");
         int grp = Integer.parseInt(group);
         mViewPager.setCurrentItem(grp-1);
     }
@@ -265,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Display group as saved in preferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String group = prefs.getString("groupNumber", "");
+        String group = prefs.getString("groupNumber", "1");
         int grp = Integer.parseInt(group);
         mViewPager.setCurrentItem(grp-1);
     }
