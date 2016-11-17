@@ -7,8 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Calendar;
 
 /**
  * Created by sushil on 9/24/16.
@@ -16,7 +19,9 @@ import android.widget.Toast;
 
 class CustomCursorAdapter extends CursorAdapter {
 
-    int tabPosition;
+    private int tabPosition;
+    private Calendar calendar = Calendar.getInstance();
+    private int day = calendar.get(Calendar.DAY_OF_WEEK);
     CustomCursorAdapter(Context context, Cursor cursor, int tabPosition){
         super(context,cursor,0);
         this.tabPosition = tabPosition;
@@ -32,6 +37,7 @@ class CustomCursorAdapter extends CursorAdapter {
         // Find fields to populate in inflated template
         TextView comp1 = (TextView) view.findViewById(R.id.component1);
         TextView comp2 = (TextView) view.findViewById(R.id.component2);
+       // RelativeLayout relativeLayout = (RelativeLayout) view.findViewById(R.id.relativeLayout);
 
         // Extract properties from cursor
         String cmp = "item"+tabPosition;
@@ -42,6 +48,15 @@ class CustomCursorAdapter extends CursorAdapter {
         // Populate fields with extracted properties
         comp1.setText(getDay(pos));
         comp2.setText(getVehicleType(vehicleType));
+
+        // Highlight the current day
+        if(day-1== pos){
+            //relativeLayout.setBackgroundColor(-1);
+            comp1.setTextColor(0xff0000ff);
+            comp2.setTextColor(0xffff00ff);
+
+        }
+
 
     }
 
