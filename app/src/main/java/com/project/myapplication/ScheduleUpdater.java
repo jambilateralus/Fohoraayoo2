@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 public class ScheduleUpdater {
     public static boolean isUpdateAvailable(){
         // Check if new update is available.
-        return true;
+        return false;
     }
 
     public static void update(Context context){
