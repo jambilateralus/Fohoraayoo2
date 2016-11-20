@@ -15,6 +15,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatImageButton;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,6 +26,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -71,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
         String group = prefs.getString("groupNumber", "1");
         int grp = Integer.parseInt(group);
         mViewPager.setCurrentItem(grp-1);
+
+        // Show current info
+        showCurrentStatus();
+
     }
 
 
@@ -124,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                 AlertDialog alert = builder.create();
                 alert.show();
             } else{
-                GPSLocation.getCurrentLocation(getBaseContext());
+                GPSLocation.saveCurrentLocation(getBaseContext());
             }
         }
 
@@ -135,6 +143,11 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 ScheduleUpdater.update(getBaseContext());
             }
+        }
+
+        // Open maps
+        else if(id == R.id.open_maps){
+            startActivity(new Intent(getBaseContext(),MapsActivity.class));
         }
 
 
@@ -177,11 +190,11 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-            DBHelper handler = new DBHelper(getContext());
+
 
             // Insert items to database
             //handler.insertItem("x","o","o","i","o","x","x");
-
+            DBHelper handler = new DBHelper(getContext());
             SQLiteDatabase db = handler.getWritableDatabase();
             String query  = "SELECT * FROM scheduleTable";
             Cursor cursor = db.rawQuery(query,null);
@@ -273,5 +286,69 @@ public class MainActivity extends AppCompatActivity {
         String group = prefs.getString("groupNumber", "1");
         int grp = Integer.parseInt(group);
         mViewPager.setCurrentItem(grp-1);
+
+        //Update current info if group is changed.
+        showCurrentStatus();
+    }
+
+
+    /** Show current status on app header **/
+    private void showCurrentStatus(){
+        AppCompatTextView group, day, type;
+        group = (AppCompatTextView) findViewById(R.id.text_group);
+        day = (AppCompatTextView) findViewById(R.id.text_day);
+        type =(AppCompatTextView) findViewById(R.id.text_type);
+
+        // Display group as saved in preferences
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String groupNumber = prefs.getString("groupNumber", "1");
+        int grp = Integer.parseInt(groupNumber);
+        group.setText("Group: "+grp);
+
+        // Display current day
+        Calendar calendar = Calendar.getInstance();
+        int weekDay = calendar.get(Calendar.DAY_OF_WEEK)-1;
+        day.setText(getDay(weekDay));
+
+        // Display type
+        DBHelper handler = new DBHelper(getBaseContext());
+        SQLiteDatabase db = handler.getWritableDatabase();
+        String query  = "SELECT item"+grp+" FROM scheduleTable;";
+        Cursor c = db.rawQuery(query, null);
+        c.moveToFirst();
+        type.setText(getVehicleType(c.getString(weekDay)));
+    }
+
+    /** get day **/
+    private String getDay(int position) {
+        switch (position) {
+            case 0:
+                return "Sunday";
+            case 1:
+                return "Monday";
+            case 2:
+                return "Tuesday";
+            case 3:
+                return "Wednesday";
+            case 4:
+                return "Thursday";
+            case 5:
+                return "Friday";
+            case 6:
+                return "Saturday";
+        }
+        return null;
+    }
+
+    private String getVehicleType(String x){
+        switch (x){
+            case "o":
+                return "Organic";
+            case "i":
+                return "Inorganic";
+            case "x":
+                return "--";
+        }
+        return null;
     }
 }

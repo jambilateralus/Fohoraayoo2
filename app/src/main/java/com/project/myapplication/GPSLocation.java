@@ -2,13 +2,18 @@ package com.project.myapplication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.location.LocationManager;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
 
 public class GPSLocation {
+
+    private static Location myLocation, vehicleLocation;
+
 
     /** Check if GPS is turned on or not.
      * This function returns:
@@ -30,27 +35,33 @@ public class GPSLocation {
 
     /** Get latitude and longitude of current location.
      * This function returns: LatLng object. **/
-     private static void getCurrentLocationLatLng(final Context context) {
+     public static void saveCurrentLocation(final Context context) {
         SingleShotLocationProvider.requestSingleUpdate(context,
                 new SingleShotLocationProvider.LocationCallback() {
                     @Override
                     public void onNewLocationAvailable(SingleShotLocationProvider.GPSCoordinates location) {
+                        // Convert lat and lon to string.
+                        String lat = ""+location.latitude;
+                        String lon = ""+location.longitude;
+
+                        // Save lat and lon using shared preferences.
+                        AppLocalData.saveLocation(context,lat,lon);
                         Log.d("Location", "my location is " + location.longitude+" "+location.latitude);
-                        Toast.makeText(context, " "+location.longitude+" "+location.latitude, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,"Location saved.", Toast.LENGTH_SHORT).show();
 
                     }
                 });
     }
 
 
-    /** Function to test above methods */
-    public static void getCurrentLocation(Context context) {
-        if (!gpsIsOn(context)){
-            Toast.makeText(context, "OFF", Toast.LENGTH_SHORT).show();
-            openGpsSettings(context);
-        }else {
-            getCurrentLocationLatLng(context);
-        }
+
+    /** Calculate distance between saved location and vehicle location **/
+    public static double getDistance(Context context, double vehichleLat, double vehicleLon){
+        myLocation.setLatitude(AppLocalData.getLatitude(context));
+        myLocation.setLongitude(AppLocalData.getLongitude(context));
+        vehicleLocation.setLatitude(vehichleLat);
+        vehicleLocation.setLongitude(vehicleLon);
+        return myLocation.distanceTo(vehicleLocation);
     }
 }
 
