@@ -43,10 +43,10 @@
             android:text="Organic"/>
 
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/text_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1323 meters"/>
+            android:id="@+id/text_distance"
+            />
 
 
 

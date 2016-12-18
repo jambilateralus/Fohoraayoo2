@@ -1,5 +1,6 @@
 package com.project.myapplication;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,7 +16,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -23,13 +23,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
+
+    static boolean active = false;
+
+
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -40,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    static AppCompatTextView distance;
+
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -51,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
 
+        distance = (AppCompatTextView) findViewById(R.id.text_distance);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
@@ -138,16 +144,22 @@ public class MainActivity extends AppCompatActivity {
 
         // Update schedule
         else if (id == R.id.action_update){
-            if(!ScheduleUpdater.isUpdateAvailable()) {
-                Toast.makeText(this, "Update not available", Toast.LENGTH_SHORT).show();
-            }else{
-                ScheduleUpdater.update(getBaseContext());
-            }
+            ScheduleUpdater.updateSchedule(getBaseContext());
         }
 
         // Open maps
         else if(id == R.id.open_maps){
-            startActivity(new Intent(getBaseContext(),MapsActivity.class));
+            if (!AppLocalData.isLocationSet(getBaseContext())){
+                Toast.makeText(this, "Set your location first.", Toast.LENGTH_SHORT).show();
+            }else {
+                startActivity(new Intent(getBaseContext(), MapsActivity.class));
+            }
+        }
+
+        //////////////////////////////////////////////////////////////
+        // test
+        else if (id==R.id.action_test){
+            startService(new Intent(getBaseContext(), MyService.class));
         }
 
 
@@ -316,7 +328,13 @@ public class MainActivity extends AppCompatActivity {
         String query  = "SELECT item"+grp+" FROM scheduleTable;";
         Cursor c = db.rawQuery(query, null);
         c.moveToFirst();
+        for (int i =0;i<=weekDay;i++){
+            c.moveToNext();
+        }
+        //c.getString(weekDay);
+
         type.setText(getVehicleType(c.getString(weekDay)));
+        //type.setText("Organic");
     }
 
     /** get day **/
@@ -350,5 +368,22 @@ public class MainActivity extends AppCompatActivity {
                 return "--";
         }
         return null;
+    }
+
+    public void displayDistance(double distance){
+        AppCompatTextView dis = (AppCompatTextView) findViewById(R.id.text_distance);
+        dis.setText(""+distance);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        active=true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        active=false;
     }
 }

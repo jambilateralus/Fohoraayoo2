@@ -28,4 +28,11 @@
         android:title="@string/action_update"
         android:icon="@drawable/ic_action_name"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_test"
+        android:orderInCategory="100"
+        android:title="Test"
+        android:icon="@drawable/photo"
+        app:showAsAction="never" />
 </menu>

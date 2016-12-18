@@ -2,7 +2,6 @@ package com.project.myapplication;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -18,7 +17,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private LatLng myLocation;
+    private LatLng myLocation,vehicleLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +54,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Add a marker in saved location.
         myLocation = new LatLng(AppLocalData.getLongitude(getBaseContext()), AppLocalData.getLatitude(getBaseContext()));
         mMap.addMarker(new MarkerOptions().position(myLocation).title("My house").icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
 
         // Zoom and move camera to myLocation.
         float zoomLevel = (float) 17.0; //This goes up to 21
+
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, zoomLevel));
+
+        if(GetLocationAsyncTask.longi>0){
+            BitmapDrawable bitmapdrw=(BitmapDrawable)getResources().getDrawable(R.drawable.vehicle);
+            Bitmap bb=bitmapdrw.getBitmap();
+            Bitmap smallMarkerr = Bitmap.createScaledBitmap(bb, width, height, false);
+            vehicleLocation = new LatLng(GetLocationAsyncTask.lati,GetLocationAsyncTask.longi);
+            mMap.addMarker(new MarkerOptions().position(vehicleLocation).title("My house").icon(BitmapDescriptorFactory.fromBitmap(smallMarkerr)));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(vehicleLocation, zoomLevel));
+        }else {
+            Toast.makeText(this, "Vehicle location not avialable", Toast.LENGTH_SHORT).show();
+        }
 
     }
 

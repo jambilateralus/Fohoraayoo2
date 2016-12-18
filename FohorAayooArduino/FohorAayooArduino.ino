@@ -185,7 +185,7 @@ void sendDataToServer(String latitude, String longitude){
  * -------------------------------*/
 void turnOnLed(int duration){
       digitalWrite(LED_BUILTIN, HIGH);  
-      delay(1000);
+      delay(duration);
       digitalWrite(LED_BUILTIN, LOW);
  }
 

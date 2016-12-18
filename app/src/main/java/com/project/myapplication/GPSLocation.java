@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
@@ -12,7 +11,6 @@ import android.widget.Toast;
 
 public class GPSLocation {
 
-    private static Location myLocation, vehicleLocation;
 
 
     /** Check if GPS is turned on or not.
@@ -57,6 +55,8 @@ public class GPSLocation {
 
     /** Calculate distance between saved location and vehicle location **/
     public static double getDistance(Context context, double vehichleLat, double vehicleLon){
+        Location myLocation = new Location("");
+        Location vehicleLocation = new Location("");
         myLocation.setLatitude(AppLocalData.getLatitude(context));
         myLocation.setLongitude(AppLocalData.getLongitude(context));
         vehicleLocation.setLatitude(vehichleLat);
