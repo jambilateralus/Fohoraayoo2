@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
 
+        startService(new Intent(getBaseContext(), MyService.class));
+
         distance = (AppCompatTextView) findViewById(R.id.text_distance);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -158,9 +160,9 @@ public class MainActivity extends AppCompatActivity {
 
         //////////////////////////////////////////////////////////////
         // test
-        else if (id==R.id.action_test){
-            startService(new Intent(getBaseContext(), MyService.class));
-        }
+        //else if (id==R.id.action_test){
+        //    startService(new Intent(getBaseContext(), MyService.class));
+        //}
 
 
         return super.onOptionsItemSelected(item);
@@ -327,14 +329,16 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase db = handler.getWritableDatabase();
         String query  = "SELECT item"+grp+" FROM scheduleTable;";
         Cursor c = db.rawQuery(query, null);
-        c.moveToFirst();
-        for (int i =0;i<=weekDay;i++){
+        if(c.moveToFirst()){
+        for (int i =0;i<weekDay;i++){
             c.moveToNext();
         }
         //c.getString(weekDay);
 
         type.setText(getVehicleType(c.getString(weekDay)));
-        //type.setText("Organic");
+        }else {
+            type.setText("Update schedule");
+        }
     }
 
     /** get day **/

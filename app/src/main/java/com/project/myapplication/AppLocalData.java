@@ -45,6 +45,19 @@ class AppLocalData {
         return Double.parseDouble(text);
     }
 
+    static boolean locationIsSaved(Context context) {
+        SharedPreferences settings;
+        String text;
+        settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        text = settings.getString(LAT_KEY, "0");
+        if (Double.parseDouble(text)>0){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     /**
      * For saving and reading update date
      **/

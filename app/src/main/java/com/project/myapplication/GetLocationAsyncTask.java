@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -75,10 +74,12 @@ class GetLocationAsyncTask extends AsyncTask<String, String, String> {
             double lat, lon,distance;
             lati = lon = Double.parseDouble(location[0]);
             longi = lat = Double.parseDouble(location[1]);
-            distance = GPSLocation.getDistance(context,lat,lon);
 
-            Toast.makeText(context, ""+distance, Toast.LENGTH_SHORT).show();
-            new Notifier().compareDistance(context,distance);
+            if(AppLocalData.isLocationSet(context)) {
+                distance = GPSLocation.getDistance(context, lat, lon);
+                //Toast.makeText(context, ""+distance, Toast.LENGTH_SHORT).show();
+                new Notifier().compareDistance(context, distance);
+            }
         } catch (PatternSyntaxException ex) {
             //
         }
